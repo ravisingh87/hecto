@@ -7,22 +7,27 @@ impl Editor{
     pub fn default() -> Self{
         Editor{}
     }
+
     pub fn run(&self){
-        enable_raw_mode().unwrap(); // We enter raw mode with this method
+        if let Err(err) = self.repl(){
+            panic!("{err:#?}");
+        }
+        println!("Goodbye.\r\n");
+    }
+    
+    fn repl(&self)-> Result<(),std::io::Error>{
+        enable_raw_mode()?; // We enter raw mode with this method
         loop {
-            match read() {
-                Ok(Key(event))=>{
-                    println!("{event:?} \r");
-                    if let Char(c) = event.code {
-                        if c == 'q'{
-                            break;
-                        }
+            if let Key(event) = read()?{
+                println!("{event:?} \r");
+                if let Char(c)= event.code{
+                    if c == 'q'{
+                        break;
                     }
-                },
-                Err(err) => println!("{err}"),
-                _=>()
+                }
             }
         }
-    disable_raw_mode().unwrap(); // Here we disable raw mode again
+    disable_raw_mode()?;
+    Ok(()) // Here we disable raw mode again
     }
 } 
