@@ -12,8 +12,8 @@ impl Terminal{
     }
     pub fn initialize() -> Result<(),std::io::Error>{
         enable_raw_mode()?;
-        let _ = Self::clear_screen();
-        let _ = Self::move_cursor(0,0);
+        let _ = Self::clear_screen()?;
+        let _ = Self::move_cursor(0,0)?;
         Ok(())
     }
     pub fn clear_screen() -> Result<(),std::io::Error>{
